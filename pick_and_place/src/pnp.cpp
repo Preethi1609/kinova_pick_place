@@ -132,8 +132,8 @@ int main(int argc, char** argv)
   moveit::planning_interface::PlanningSceneInterface planning_scene_interface;
   moveit::planning_interface::MoveGroupInterface arm_group("arm");
   moveit::planning_interface::MoveGroupInterface gripper_group("gripper");
-  arm_group.setPlanningTime(45.0);
-  gripper_group.setPlanningTime(45.0);
+  arm_group.setPlanningTime(50.0);
+  gripper_group.setPlanningTime(50.0);
 
   addCollisionObjects(planning_scene_interface);
 
@@ -166,26 +166,41 @@ int main(int argc, char** argv)
   gripper_group.move();
   ros::WallDuration(1.0).sleep();
 
-  arm_group.setNamedTarget("Home");
-  ROS_INFO_NAMED("tutorial", "Moving to home position");
-  arm_group.move();
-  ros::WallDuration(1.0).sleep();
+  //arm_group.setNamedTarget("Home");
+  //ROS_INFO_NAMED("tutorial", "Moving to home position");
+  //arm_group.move();
+  //ros::WallDuration(1.0).sleep();
 
   ROS_INFO_NAMED("tutorial", "Moving towards the other table");
   geometry_msgs::Pose eef_pose1;
-  eef_pose.orientation.x = -0.988008788921;
-  eef_pose.orientation.y = -0.0275425709658;
-  eef_pose.orientation.z = -0.00145792044579;
-  eef_pose.orientation.w = 0.15192109315;
-  eef_pose.position.x = -0.5;
-  eef_pose.position.y = 0.0;
-  eef_pose.position.z = 0.45;
+  eef_pose1.orientation.x = -0.988008788921;
+  eef_pose1.orientation.y = -0.0275425709658;
+  eef_pose1.orientation.z = -0.00145792044579;
+  eef_pose1.orientation.w = 0.15192109315;
+  eef_pose1.position.x = 0.265849787727;
+  eef_pose1.position.y = -0.212182493;
+  eef_pose1.position.z = 0.45;
   arm_group.setPoseTarget(eef_pose1);
-
   moveit::planning_interface::MoveGroupInterface::Plan my_plan1;
   bool success1 = (arm_group.plan(my_plan1) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
   arm_group.move();
   ros::WallDuration(1.0).sleep();
+
+  gripper_group.setNamedTarget("Open");
+  ROS_INFO_NAMED("tutorial", "Opening gripper");
+  gripper_group.move();
+  ros::WallDuration(1.0).sleep();
+
+  arm_group.detachObject("object");
+  ROS_INFO_NAMED("tutorial", "Detaching the object");
+  ros::WallDuration(1.0).sleep();
+
+  arm_group.setNamedTarget("Vertical");
+  ROS_INFO_NAMED("tutorial", "Moving to home position");
+  arm_group.move();
+  ros::WallDuration(1.0).sleep();
+
+  
   
   
   ros::waitForShutdown();

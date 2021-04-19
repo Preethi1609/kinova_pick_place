@@ -16,4 +16,4 @@ controller_list:
 
 initial:
   - group: arm
-    pose: Home
+    pose: Vertical
