@@ -65,13 +65,13 @@ void addCollisionObjects(moveit::planning_interface::PlanningSceneInterface& pla
   collision_objects[0].primitives[0].dimensions.resize(3);
   collision_objects[0].primitives[0].dimensions[0] = 0.2;
   collision_objects[0].primitives[0].dimensions[1] = 0.4;
-  collision_objects[0].primitives[0].dimensions[2] = 0.4;
+  collision_objects[0].primitives[0].dimensions[2] = 0.3;
 
   /* Define the pose of the table. */
   collision_objects[0].primitive_poses.resize(1);
   collision_objects[0].primitive_poses[0].position.x = 0.265849787727;
   collision_objects[0].primitive_poses[0].position.y = -0.212182493;
-  collision_objects[0].primitive_poses[0].position.z = 0.2;
+  collision_objects[0].primitive_poses[0].position.z = 0.15;
   // END_SUB_TUTORIAL
 
   collision_objects[0].operation = collision_objects[0].ADD;
@@ -87,13 +87,13 @@ void addCollisionObjects(moveit::planning_interface::PlanningSceneInterface& pla
   collision_objects[1].primitives[0].dimensions.resize(3);
   collision_objects[1].primitives[0].dimensions[0] = 0.4;
   collision_objects[1].primitives[0].dimensions[1] = 0.2;
-  collision_objects[1].primitives[0].dimensions[2] = 0.4;
+  collision_objects[1].primitives[0].dimensions[2] = 0.3;
 
   /* Define the pose of the table. */
   collision_objects[1].primitive_poses.resize(1);
   collision_objects[1].primitive_poses[0].position.x = 0.0;
   collision_objects[1].primitive_poses[0].position.y = 0.5;
-  collision_objects[1].primitive_poses[0].position.z = 0.2;
+  collision_objects[1].primitive_poses[0].position.z = 0.15;
   // END_SUB_TUTORIAL
 
   collision_objects[1].operation = collision_objects[1].ADD;
@@ -113,7 +113,7 @@ void addCollisionObjects(moveit::planning_interface::PlanningSceneInterface& pla
   collision_objects[2].primitive_poses.resize(1);
   collision_objects[2].primitive_poses[0].position.x = 0.0;
   collision_objects[2].primitive_poses[0].position.y = 0.5;
-  collision_objects[2].primitive_poses[0].position.z = 0.352;
+  collision_objects[2].primitive_poses[0].position.z = 0.35;
   // END_SUB_TUTORIAL
 
   collision_objects[2].operation = collision_objects[2].ADD;
@@ -148,7 +148,7 @@ int main(int argc, char** argv)
   eef_pose.orientation.w = 0.15192109315;
   eef_pose.position.x = 0.0;
   eef_pose.position.y = 0.5;
-  eef_pose.position.z = 0.45;
+  eef_pose.position.z = 0.4;
   arm_group.setPoseTarget(eef_pose);
 
   moveit::planning_interface::MoveGroupInterface::Plan my_plan;
@@ -157,13 +157,13 @@ int main(int argc, char** argv)
   ROS_INFO_NAMED("tutorial", "Moving towards the ball");
   ros::WallDuration(1.0).sleep();
 
-  arm_group.attachObject("object");
-  ROS_INFO_NAMED("tutorial", "Attaching the object");
-  ros::WallDuration(1.0).sleep();
-
   gripper_group.setNamedTarget("Close");
   ROS_INFO_NAMED("tutorial", "Closing gripper");
   gripper_group.move();
+  ros::WallDuration(1.0).sleep();
+
+  arm_group.attachObject("object");
+  ROS_INFO_NAMED("tutorial", "Attaching the object");
   ros::WallDuration(1.0).sleep();
 
   //arm_group.setNamedTarget("Home");
@@ -179,22 +179,22 @@ int main(int argc, char** argv)
   eef_pose1.orientation.w = 0.15192109315;
   eef_pose1.position.x = 0.265849787727;
   eef_pose1.position.y = -0.212182493;
-  eef_pose1.position.z = 0.45;
+  eef_pose1.position.z = 0.4;
   arm_group.setPoseTarget(eef_pose1);
   moveit::planning_interface::MoveGroupInterface::Plan my_plan1;
   bool success1 = (arm_group.plan(my_plan1) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
   arm_group.move();
   ros::WallDuration(1.0).sleep();
 
-  gripper_group.setNamedTarget("Open");
-  ROS_INFO_NAMED("tutorial", "Opening gripper");
-  gripper_group.move();
-  ros::WallDuration(1.0).sleep();
-
   arm_group.detachObject("object");
   ROS_INFO_NAMED("tutorial", "Detaching the object");
   ros::WallDuration(1.0).sleep();
 
+  gripper_group.setNamedTarget("Open");
+  ROS_INFO_NAMED("tutorial", "Opening gripper");
+  gripper_group.move();
+  ros::WallDuration(1.0).sleep();
+  
   arm_group.setNamedTarget("Vertical");
   ROS_INFO_NAMED("tutorial", "Moving to home position");
   arm_group.move();
