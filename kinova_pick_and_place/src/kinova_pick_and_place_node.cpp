@@ -44,18 +44,15 @@
 // TF2
 #include <tf2_geometry_msgs/tf2_geometry_msgs.h>
 
-
+  /* This function is used to create the environment, it adds three collision objets: 
+    Two tables and an object(sphere) that is placed on one of the tables. */
 void addCollisionObjects(moveit::planning_interface::PlanningSceneInterface& planning_scene_interface)
 {
-  // BEGIN_SUB_TUTORIAL table1
-  //
-  // Creating Environment
-  // ^^^^^^^^^^^^^^^^^^^^
-  // Create vector to hold 3 collision objects.
+
   std::vector<moveit_msgs::CollisionObject> collision_objects;
   collision_objects.resize(3);
 
-  // Add the first table where the cube will originally be kept.
+  // Add the first table where the sphere will originally be kept.
   collision_objects[0].id = "table1";
   collision_objects[0].header.frame_id = "root";
 
@@ -63,20 +60,18 @@ void addCollisionObjects(moveit::planning_interface::PlanningSceneInterface& pla
   collision_objects[0].primitives.resize(1);
   collision_objects[0].primitives[0].type = collision_objects[0].primitives[0].BOX;
   collision_objects[0].primitives[0].dimensions.resize(3);
-  collision_objects[0].primitives[0].dimensions[0] = 0.2;
-  collision_objects[0].primitives[0].dimensions[1] = 0.4;
+  collision_objects[0].primitives[0].dimensions[0] = 0.4;
+  collision_objects[0].primitives[0].dimensions[1] = 0.2;
   collision_objects[0].primitives[0].dimensions[2] = 0.3;
 
   /* Define the pose of the table. */
   collision_objects[0].primitive_poses.resize(1);
-  collision_objects[0].primitive_poses[0].position.x = 0.265849787727;
-  collision_objects[0].primitive_poses[0].position.y = -0.212182493;
+  collision_objects[0].primitive_poses[0].position.x = 0.0;
+  collision_objects[0].primitive_poses[0].position.y = 0.5;
   collision_objects[0].primitive_poses[0].position.z = 0.15;
-  // END_SUB_TUTORIAL
 
   collision_objects[0].operation = collision_objects[0].ADD;
 
-  // BEGIN_SUB_TUTORIAL table2
   // Add the second table where we will be placing the cube.
   collision_objects[1].id = "table2";
   collision_objects[1].header.frame_id = "root";
@@ -85,20 +80,18 @@ void addCollisionObjects(moveit::planning_interface::PlanningSceneInterface& pla
   collision_objects[1].primitives.resize(1);
   collision_objects[1].primitives[0].type = collision_objects[1].primitives[0].BOX;
   collision_objects[1].primitives[0].dimensions.resize(3);
-  collision_objects[1].primitives[0].dimensions[0] = 0.4;
-  collision_objects[1].primitives[0].dimensions[1] = 0.2;
+  collision_objects[1].primitives[0].dimensions[0] = 0.2;
+  collision_objects[1].primitives[0].dimensions[1] = 0.4;
   collision_objects[1].primitives[0].dimensions[2] = 0.3;
 
   /* Define the pose of the table. */
   collision_objects[1].primitive_poses.resize(1);
-  collision_objects[1].primitive_poses[0].position.x = 0.0;
-  collision_objects[1].primitive_poses[0].position.y = 0.5;
+  collision_objects[1].primitive_poses[0].position.x = 0.265849787727;
+  collision_objects[1].primitive_poses[0].position.y = -0.212182493;
   collision_objects[1].primitive_poses[0].position.z = 0.15;
-  // END_SUB_TUTORIAL
 
   collision_objects[1].operation = collision_objects[1].ADD;
 
-  // BEGIN_SUB_TUTORIAL object
   // Define the object that we will be manipulating
   collision_objects[2].header.frame_id = "root";
   collision_objects[2].id = "object";
@@ -114,33 +107,19 @@ void addCollisionObjects(moveit::planning_interface::PlanningSceneInterface& pla
   collision_objects[2].primitive_poses[0].position.x = 0.0;
   collision_objects[2].primitive_poses[0].position.y = 0.5;
   collision_objects[2].primitive_poses[0].position.z = 0.35;
-  // END_SUB_TUTORIAL
 
   collision_objects[2].operation = collision_objects[2].ADD;
 
   planning_scene_interface.applyCollisionObjects(collision_objects);
+  ROS_INFO_STREAM("Adding Collision Objects");
 }
 
-int main(int argc, char** argv)
-{
-  ros::init(argc, argv, "kinova_arm_pick_place");
-  ros::NodeHandle nh;
-  ros::AsyncSpinner spinner(1);
-  spinner.start();
+ /* This function is used move the end effector of the arm towards the table
+    which has the object over it. */
 
-  ros::WallDuration(1.0).sleep();
-  moveit::planning_interface::PlanningSceneInterface planning_scene_interface;
-  moveit::planning_interface::MoveGroupInterface arm_group("arm");
-  moveit::planning_interface::MoveGroupInterface gripper_group("gripper");
-  arm_group.setPlanningTime(50.0);
-  gripper_group.setPlanningTime(50.0);
+void moveToGraspPose(moveit::planning_interface::MoveGroupInterface& arm_group){
 
-  addCollisionObjects(planning_scene_interface);
-
-
-  // Wait a bit for ROS things to initialize
-  ros::WallDuration(1.0).sleep();
-
+  ROS_INFO_STREAM("Moving towards the ball");
   geometry_msgs::Pose eef_pose;
   eef_pose.orientation.x = -0.988008788921;
   eef_pose.orientation.y = -0.0275425709658;
@@ -152,26 +131,32 @@ int main(int argc, char** argv)
   arm_group.setPoseTarget(eef_pose);
 
   moveit::planning_interface::MoveGroupInterface::Plan my_plan;
-  bool success = (arm_group.plan(my_plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
+  arm_group.plan(my_plan);
   arm_group.move();
-  ROS_INFO_NAMED("tutorial", "Moving towards the ball");
-  ros::WallDuration(1.0).sleep();
 
+}
+
+/* This function is used to close the gripper. "Close" is a named target which was set using moveit setup assistant */
+
+void closeGripper(moveit::planning_interface::MoveGroupInterface& gripper_group){
   gripper_group.setNamedTarget("Close");
-  ROS_INFO_NAMED("tutorial", "Closing gripper");
+  ROS_INFO_STREAM("Closing gripper");
   gripper_group.move();
-  ros::WallDuration(1.0).sleep();
 
+}
+
+/* This function is used to attach an object to the arm, by default it attaches it to the end-effector link */
+
+void attachingObject(moveit::planning_interface::MoveGroupInterface& arm_group){
   arm_group.attachObject("object");
-  ROS_INFO_NAMED("tutorial", "Attaching the object");
-  ros::WallDuration(1.0).sleep();
+  ROS_INFO_STREAM("Attaching the object");
 
-  //arm_group.setNamedTarget("Home");
-  //ROS_INFO_NAMED("tutorial", "Moving to home position");
-  //arm_group.move();
-  //ros::WallDuration(1.0).sleep();
+}
+/* This function is used move the end effector of the arm towards the second table
+    on which the object has to be placed. */
 
-  ROS_INFO_NAMED("tutorial", "Moving towards the other table");
+void moveToPlacePose(moveit::planning_interface::MoveGroupInterface& arm_group){
+  ROS_INFO_STREAM("Moving towards the other table");
   geometry_msgs::Pose eef_pose1;
   eef_pose1.orientation.x = -0.988008788921;
   eef_pose1.orientation.y = -0.0275425709658;
@@ -184,24 +169,69 @@ int main(int argc, char** argv)
   moveit::planning_interface::MoveGroupInterface::Plan my_plan1;
   bool success1 = (arm_group.plan(my_plan1) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
   arm_group.move();
-  ros::WallDuration(1.0).sleep();
 
+}
+/* This function is used to detach the object from the arm. */
+
+void detachingObject(moveit::planning_interface::MoveGroupInterface& arm_group){
   arm_group.detachObject("object");
-  ROS_INFO_NAMED("tutorial", "Detaching the object");
-  ros::WallDuration(1.0).sleep();
+  ROS_INFO_STREAM("Detaching the object");
 
+}
+
+/* This function is used to open the gripper. "Open" is a named target which was set using
+ Moveit Setup Assistant */
+
+void openGripper(moveit::planning_interface::MoveGroupInterface& gripper_group){
   gripper_group.setNamedTarget("Open");
-  ROS_INFO_NAMED("tutorial", "Opening gripper");
+  ROS_INFO_STREAM("Opening gripper");
   gripper_group.move();
-  ros::WallDuration(1.0).sleep();
-  
-  arm_group.setNamedTarget("Vertical");
-  ROS_INFO_NAMED("tutorial", "Moving to home position");
-  arm_group.move();
-  ros::WallDuration(1.0).sleep();
 
+}
+
+/*After placing the object the arm goes back to the initial position which is named "Vertical", set using 
+  Moveit Setup Assistant. */
+
+void moveToInitialPose(moveit::planning_interface::MoveGroupInterface& arm_group){
+  arm_group.setNamedTarget("Vertical");
+  ROS_INFO_STREAM("Moving to home position");
+  arm_group.move();
+
+}
+
+
+
+int main(int argc, char** argv)
+{
+  ros::init(argc, argv, "kinova_arm_pick_place");
+  ros::NodeHandle nh;
+  ros::AsyncSpinner spinner(1);
+  spinner.start();
+
+  //The PlanningSceneInterface class is used to add collision object to our
+  //environment, (here) 2 tables and a spherical object.
+  moveit::planning_interface::PlanningSceneInterface planning_scene_interface;
+
+  //The MoveGroupInterface class is set up for the arm as well as gripper planning groups
+  moveit::planning_interface::MoveGroupInterface arm_group("arm");
   
+  moveit::planning_interface::MoveGroupInterface gripper_group("gripper");
+
+  addCollisionObjects(planning_scene_interface);
+
+  moveToGraspPose(arm_group);
   
+  closeGripper(gripper_group);
+
+  attachingObject(arm_group);
+
+  moveToPlacePose(arm_group);
+
+  detachingObject(arm_group);
+
+  openGripper(gripper_group);
+
+  moveToInitialPose(arm_group);
   
   ros::waitForShutdown();
   return 0;

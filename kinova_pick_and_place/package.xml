@@ -3,7 +3,8 @@
   <name>kinova_pick_and_place</name>
   <version>0.0.0</version>
   <description>The kinova_pick_and_place package</description>
-  <maintainer email="preethi@artpark.in">artparkintern</maintainer>
+  <author email="preethi@artpark.in">Preethi N</author>
+  <maintainer email="preethi@artpark.in">Preethi N</maintainer>
   <license>TODO</license>
   <buildtool_depend>catkin</buildtool_depend>
 
