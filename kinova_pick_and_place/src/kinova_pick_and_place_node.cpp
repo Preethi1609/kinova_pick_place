@@ -167,7 +167,7 @@ void moveToPlacePose(moveit::planning_interface::MoveGroupInterface& arm_group){
   eef_pose1.position.z = 0.4;
   arm_group.setPoseTarget(eef_pose1);
   moveit::planning_interface::MoveGroupInterface::Plan my_plan1;
-  bool success1 = (arm_group.plan(my_plan1) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
+  arm_group.plan(my_plan1);
   arm_group.move();
 
 }
