@@ -1,5 +1,5 @@
 <launch>
-  <param name="robot_type" value="j2s7s300" />
+  <param name="robot_type" value="kinova_arm" />
   <param name="robot_connected" value="false" />
 	<param name="/pick_place_demo/arm/solve_type" value="Manipulation2" />
   <param name="/pick_place_demo/arm/kinematics_solver_timeout" value="0.05" />
@@ -24,9 +24,9 @@
   <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">
     <param name="/use_gui" value="false"/>
     <rosparam param="/source_list">[/move_group/fake_controller_joint_states]</rosparam>
-		<param name="zeros/j2s7s300_joint_2" value="3.1415"/>		
-	  <param name="zeros/j2s7s300_joint_4" value="3.1415"/> 
-    <param name="zeros/j2s7s300_joint_6" value="3.1415"/> 
+		<param name="zeros/kinova_arm_joint_2" value="3.1415"/>		
+	  <param name="zeros/kinova_arm_joint_4" value="3.1415"/> 
+    <param name="zeros/kinova_arm_joint_6" value="3.1415"/> 
   </node>
 
   <!-- Given the published joint states, publish tf for the robot links -->

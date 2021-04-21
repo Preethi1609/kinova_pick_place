@@ -9,19 +9,19 @@ generic_hw_control_loop:
 # Settings for ros_control hardware interface
 hardware_interface:
   joints:
-    - j2s7s300_joint_1
-    - j2s7s300_joint_2
-    - j2s7s300_joint_3
-    - j2s7s300_joint_4
-    - j2s7s300_joint_5
-    - j2s7s300_joint_6
-    - j2s7s300_joint_7
-    - j2s7s300_joint_finger_1
-    - j2s7s300_joint_finger_tip_1
-    - j2s7s300_joint_finger_2
-    - j2s7s300_joint_finger_tip_2
-    - j2s7s300_joint_finger_3
-    - j2s7s300_joint_finger_tip_3
+    - kinova_arm_joint_1
+    - kinova_arm_joint_2
+    - kinova_arm_joint_3
+    - kinova_arm_joint_4
+    - kinova_arm_joint_5
+    - kinova_arm_joint_6
+    - kinova_arm_joint_7
+    - kinova_arm_joint_finger_1
+    - kinova_arm_joint_finger_tip_1
+    - kinova_arm_joint_finger_2
+    - kinova_arm_joint_finger_tip_2
+    - kinova_arm_joint_finger_3
+    - kinova_arm_joint_finger_tip_3
   sim_control_mode: 1  # 0: position, 1: velocity
 # Publish all joint states
 # Creates the /joint_states topic necessary in ROS

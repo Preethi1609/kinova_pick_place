@@ -1,5 +1,5 @@
 <launch>
-  <param name="robot_type" value="j2s7s300" />
+  <param name="robot_type" value="kinova_arm" />
   <param name="/pick_place_demo/arm/solve_type" value="Manipulation2" />
   <param name="/pick_place_demo/arm/kinematics_solver_timeout" value="0.05" />
 
@@ -19,20 +19,20 @@
   <!-- If needed, broadcast static tf for robot root -->
   
   <!-- Run joint trajectory action server, which receives planned motion goal under "follow_joint_trajectory", and publish ROS standard trajectory via topic "command". Then for specified robot, the trajectory will be interpreted to their own joint trajectory controller -->
-  <node name="j2s7s300_joint_trajectory_action_server" pkg="kinova_driver" type="joint_trajectory_action_server" output="screen" respawn="false" args="j2s7s300"/>
+  <node name="kinova_arm_joint_trajectory_action_server" pkg="kinova_driver" type="joint_trajectory_action_server" output="screen" respawn="false" args="kinova_arm"/>
 
   <!-- Run gripper command action server, which receives planned motion goal under "gripper_command". After receiving the command from Moveit Rviz Plugin, this node act as an actionlib client and send the goal to the finger position action server from kinova_driver.  -->
-  <node name="j2s7s300_gripper_command_action_server" pkg="kinova_driver" type="gripper_command_action_server" output="screen" respawn="false" args="j2s7s300"/>
+  <node name="kinova_arm_gripper_command_action_server" pkg="kinova_driver" type="gripper_command_action_server" output="screen" respawn="false" args="kinova_arm"/>
 
 
   <!-- Run the main MoveIt executable without trajectory execution (we do not have controllers configured by default) -->
-  <include file="$(find kinova_moveit_config)/launch/move_group_j2s7s300.launch">
+  <include file="$(find kinova_moveit_config)/launch/move_group_kinova_arm.launch">
     <arg name="allow_trajectory_execution" value="true"/>
     <arg name="fake_execution" value="false"/>
     <arg name="info" value="true"/>
     <arg name="debug" value="$(arg debug)"/>
-    <arg name="joint_states_ns" value="/j2s7s300_driver/out/joint_state"/> 
-    <arg name="controller_manager" value="j2s7s300"/> 
+    <arg name="joint_states_ns" value="/kinova_arm_driver/out/joint_state"/> 
+    <arg name="controller_manager" value="kinova_arm"/> 
   </include>
 
   <!-- kinova-driver Controller parameters-->   

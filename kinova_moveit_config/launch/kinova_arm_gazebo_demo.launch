@@ -1,6 +1,6 @@
 <launch>
 
-  <param name="robot_type" value="j2s7s300" />
+  <param name="robot_type" value="kinova_arm" />
   <param name="robot_connected" value="false" />
   <param name="/pick_place_demo/arm/solve_type" value="Manipulation2" />
   <param name="/pick_place_demo/arm/kinematics_solver_timeout" value="0.05" />
@@ -19,13 +19,13 @@
   </include>
 
   <!-- Run the main MoveIt executable without trajectory execution (we do not have controllers configured by default) -->
-  <include file="$(find kinova_moveit_config)/launch/move_group_j2s7s300.launch">
+  <include file="$(find kinova_moveit_config)/launch/move_group_kinova_arm.launch">
     <arg name="allow_trajectory_execution" value="true"/>
     <arg name="fake_execution" value="false"/>
     <arg name="info" value="true"/>
     <arg name="debug" value="$(arg debug)"/>
-    <arg name="joint_states_ns" value="/j2s7s300/joint_states"/>
-    <arg name="controller_manager" value="j2s7s300_ros_control"/>
+    <arg name="joint_states_ns" value="/kinova_arm/joint_states"/>
+    <arg name="controller_manager" value="kinova_arm_ros_control"/>
   </include>  
 
   <!-- ros-control Controller parameters-->  

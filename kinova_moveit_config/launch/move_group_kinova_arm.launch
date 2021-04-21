@@ -35,7 +35,7 @@
 
   <!-- Sensors Functionality -->
   <include ns="move_group" file="$(find kinova_moveit_config)/launch/sensor_manager.launch.xml" if="$(arg allow_trajectory_execution)">
-    <arg name="moveit_sensor_manager" value="j2s7s300" />
+    <arg name="moveit_sensor_manager" value="kinova_arm" />
   </include>
 
   <!-- Start the actual move_group node/action server -->
