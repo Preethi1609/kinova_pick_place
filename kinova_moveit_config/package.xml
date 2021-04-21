@@ -6,7 +6,11 @@
      An automatically generated package with all the configuration and launch files for using the kinova_arm with the MoveIt Motion Planning Framework
   </description>
   <author email="assistant@moveit.ros.org">MoveIt Setup Assistant</author>
+  <author email="preethi@artpark.in">Preethi N</author>
+
   <maintainer email="assistant@moveit.ros.org">MoveIt Setup Assistant</maintainer>
+  <maintainer email="preethi@artpark.in">Preethi N</maintainer>
+
 
   <license>BSD</license>
 

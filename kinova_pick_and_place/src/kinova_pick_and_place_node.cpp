@@ -32,7 +32,11 @@
 *  POSSIBILITY OF SUCH DAMAGE.
 *********************************************************************/
 
-/* Author: Ioan Sucan, Ridhwan Luthra*/
+// Major portions of this code have been taken from MoveIt! tutorials: https://github.com/ros-planning/moveit_tutorials/tree/melodic-devel
+
+/* Author: Ioan Sucan, Ridhwan Luthra, */
+/* Author: Sachin Chitta, Dave Coleman, Mike Lautman */
+/* Author: Preethi N */
 
 // ROS
 #include <ros/ros.h>

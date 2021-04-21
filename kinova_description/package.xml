@@ -7,7 +7,11 @@
       Includes the model and URDF files for working with an arm in RViz or Gazebo.
   </description>
   <maintainer email="ros@kinovarobotics.com">Kinova ROS Support</maintainer>
+  <maintainer email="preethi@artpark.in">Preethi N</maintainer>
+
   <author>Kinova ROS Support</author>
+  <author>Preethi N</author>
+
   <license>BSD</license>
   <url>http://ros.org/wiki/kinova_description</url>
 
