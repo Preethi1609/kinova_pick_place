@@ -1,0 +1,8 @@
+- git:
+    local-name: kinova_pick_place
+    uri: https://github.com/Preethi1609/kinova_pnp.git
+    version: preethi-dev
+- git:
+    local-name: kinova-ros
+    uri: https://github.com/Kinovarobotics/kinova-ros.git
+    version: master

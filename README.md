@@ -1,4 +1,4 @@
-# kinova-pnp
+# kinova_pick_place
 
 Repository for kinova arm j2s7s300 refers to jaco v2 7DOF spherical 3fingers
 
@@ -28,13 +28,14 @@ The project is based on Ubuntu 18.04, ROS Melodic, gazebo 9.0, wstool and catkin
 	```
 	cd ~/kinova_ws/src
 	wstool init .
-  wstool merge https://raw.githubusercontent.com/swri-robotics/gilbreth/kinetic-devel/gilbreth.rosinstall	wstool update
+  	wstool merge https://raw.githubusercontent.com/Preethi1609/kinova_pick_place/preethi-dev/kinova.rosinstall	
+	wstool update
 	rosdep install --from-paths . --ignore-src -y
 	```
 - Build the workspace
 
 	```
-	cd ~/catkin_ws
+	cd ~/kinova_ws
 	catkin build
 	```
 
@@ -65,7 +66,7 @@ The project is based on Ubuntu 18.04, ROS Melodic, gazebo 9.0, wstool and catkin
 1. Run the kinova_pick_and_place_node:
 
     ```
-        rosrun kinova_pick_and_ple kinova_pick_and_place_node
+        rosrun kinova_pick_and_place kinova_pick_and_place_node
     ```
  
 
