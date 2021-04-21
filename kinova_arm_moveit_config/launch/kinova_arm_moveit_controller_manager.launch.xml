@@ -6,5 +6,5 @@
          value="$(arg moveit_controller_manager)"/>
 
   <!-- The rest of the params are specific to this plugin -->
-  <rosparam file="$(find kinova_moveit_config)/config/controllers.yaml"/>
+  <rosparam file="$(find kinova_arm_moveit_config)/config/controllers.yaml"/>
 </launch>

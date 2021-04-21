@@ -54,7 +54,7 @@ The project is based on Ubuntu 18.04, ROS Melodic, gazebo 9.0, wstool and catkin
 	
 	
    ```
-      roslaunch kinova_moveit_config demo.launch
+      roslaunch kinova_arm_moveit_config demo.launch
    ```	
     
    This opens Rviz to visualize the kinova arm.
@@ -62,10 +62,10 @@ The project is based on Ubuntu 18.04, ROS Melodic, gazebo 9.0, wstool and catkin
 
 ### Run the pick and place program
 
-1. Run the kinova_pick_and_place_node:
+1. Run the kinova_arm_pick_and_place_node:
 
     ```
-        rosrun kinova_pick_and_place kinova_pick_and_place_node
+        rosrun kinova_arm_pick_and_place kinova_arm_pick_and_place_node
     ```
  
 

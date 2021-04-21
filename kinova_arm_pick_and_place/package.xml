@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <package format="2">
-  <name>kinova_pick_and_place</name>
+  <name>kinova_arm_pick_and_place</name>
   <version>0.0.0</version>
-  <description>The kinova_pick_and_place package</description>
+  <description>The kinova_arm_pick_and_place package</description>
   <author email="preethi@artpark.in">Preethi N</author>
   <maintainer email="preethi@artpark.in">Preethi N</maintainer>
   <license>TODO</license>
