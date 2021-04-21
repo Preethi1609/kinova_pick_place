@@ -28,7 +28,7 @@ The project is based on Ubuntu 18.04, ROS Melodic, gazebo 9.0, wstool and catkin
 	```
 	cd ~/kinova_ws/src
 	wstool init .
-  	wstool merge https://raw.githubusercontent.com/Preethi1609/kinova_pick_place/preethi-dev/kinova.rosinstall	
+  	wstool merge https://cdn.jsdelivr.net/gh/Preethi1609/kinova_pick_place@preethi-dev/kinova.rosinstall	
 	wstool update
 	rosdep install --from-paths . --ignore-src -y
 	```
@@ -55,7 +55,6 @@ The project is based on Ubuntu 18.04, ROS Melodic, gazebo 9.0, wstool and catkin
 	
    ```
       roslaunch kinova_moveit_config demo.launch
-
    ```	
     
    This opens Rviz to visualize the kinova arm.
