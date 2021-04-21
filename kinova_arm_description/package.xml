@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <package format="2">
-  <name>kinova_description</name>
+  <name>kinova_arm_description</name>
   <version>0.0.1</version>
   <description>
       3D model of various Kinova robotic arms.
@@ -13,7 +13,7 @@
   <author>Preethi N</author>
 
   <license>BSD</license>
-  <url>http://ros.org/wiki/kinova_description</url>
+  <url>http://ros.org/wiki/kinova_arm_description</url>
 
   <buildtool_depend>catkin</buildtool_depend>
 

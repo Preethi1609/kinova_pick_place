@@ -16,11 +16,11 @@
     xmlns:physics="http://playerstage.sourceforge.net/gazebo/xmlschema/#physics"
     xmlns:xacro="http://www.ros.org/wiki/xacro">
 
-    <xacro:include filename="$(find kinova_description)/urdf/kinova_common.xacro" />
-    <xacro:include filename="$(find kinova_description)/urdf/kinova_finger_set.xacro" />
+    <xacro:include filename="$(find kinova_arm_description)/urdf/kinova_common.xacro" />
+    <xacro:include filename="$(find kinova_arm_description)/urdf/kinova_finger_set.xacro" />
 
     <!-- Import all Gazebo-customization elements -->
-    <xacro:include filename="$(find kinova_description)/urdf/kinova.gazebo" />
+    <xacro:include filename="$(find kinova_arm_description)/urdf/kinova.gazebo" />
 
     <xacro:property name="link_base_mesh" value="base" />
     <xacro:property name="link_1_mesh" value="shoulder" />

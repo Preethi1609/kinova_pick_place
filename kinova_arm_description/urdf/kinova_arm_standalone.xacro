@@ -17,7 +17,7 @@
 	xmlns:xacro="http://www.ros.org/wiki/xacro" name="kinova_arm">
 
 
-  <xacro:include filename="$(find kinova_description)/urdf/kinova_arm.xacro"/>
+  <xacro:include filename="$(find kinova_arm_description)/urdf/kinova_arm.xacro"/>
 
   <link name="root"/>
 

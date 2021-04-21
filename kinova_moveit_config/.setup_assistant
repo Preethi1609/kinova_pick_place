@@ -1,6 +1,6 @@
 moveit_setup_assistant_config:
   URDF:
-    package: kinova_description
+    package: kinova_arm_description
     relative_path: urdf/kinova_arm_standalone.xacro
   SRDF:
     relative_path: config/kinova_arm.srdf
