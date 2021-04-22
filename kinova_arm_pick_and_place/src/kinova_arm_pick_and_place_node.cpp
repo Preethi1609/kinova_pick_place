@@ -46,7 +46,7 @@
 #include <moveit/move_group_interface/move_group_interface.h>
 
 // TF2
-#include <tf2_geometry_msgs/tf2_geometry_msgs.h>
+//#include <tf2_geometry_msgs/tf2_geometry_msgs.h>
 
   /* This function is used to create the environment, it adds three collision objets: 
     Two tables and an object(sphere) that is placed on one of the tables. */
