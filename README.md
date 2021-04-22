@@ -1,1 +1,1 @@
-# robojanitor
+# kinova_pick_place
