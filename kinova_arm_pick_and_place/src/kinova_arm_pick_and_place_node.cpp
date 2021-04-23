@@ -53,12 +53,14 @@ void addCollisionObjects(moveit::planning_interface::PlanningSceneInterface& pla
 
   std::vector<moveit_msgs::CollisionObject> collision_objects;
   collision_objects.resize(3);
+  ROS_INFO_STREAM("Size of collision objects: "<<collision_objects.size());
 
   // Add the first table where the sphere will originally be kept.
   collision_objects[0].id = "table1";
   collision_objects[0].header.frame_id = "root";
 
   /* Define the primitive and its dimensions. */
+  ROS_INFO_STREAM("Size of primitives: "<<collision_objects[0].primitives.size());
   collision_objects[0].primitives.resize(1);
   collision_objects[0].primitives[0].type = collision_objects[0].primitives[0].BOX;
   collision_objects[0].primitives[0].dimensions.resize(3);
@@ -129,7 +131,8 @@ void moveToGraspPose(moveit::planning_interface::MoveGroupInterface& arm_group){
   eef_pose.orientation.w = 0.15192109315;
   eef_pose.position.x = 0.0;
   eef_pose.position.y = 0.5;
-  eef_pose.position.z = 0.4;
+  eef_pose.position.z = 0.7;
+  //eef_pose.position.z = 0.4;
   arm_group.setPoseTarget(eef_pose);
 
   moveit::planning_interface::MoveGroupInterface::Plan my_plan;
@@ -223,17 +226,17 @@ int main(int argc, char** argv)
 
   moveToGraspPose(arm_group);
   
-  closeGripper(gripper_group);
+  //closeGripper(gripper_group);
 
-  attachingObject(arm_group);
+  //attachingObject(arm_group);
 
-  moveToPlacePose(arm_group);
+  //moveToPlacePose(arm_group);
 
-  detachingObject(arm_group);
+  //detachingObject(arm_group);
 
-  openGripper(gripper_group);
+  //openGripper(gripper_group);
 
-  moveToInitialPose(arm_group);
+  //moveToInitialPose(arm_group);
   
   ros::waitForShutdown();
   return 0;
