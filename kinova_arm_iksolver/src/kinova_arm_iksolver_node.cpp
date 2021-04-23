@@ -38,7 +38,7 @@ int main(int argc, char** argv)
   visualization_msgs::Marker points;
   points.header.frame_id = "root"; 
   points.header.stamp = ros::Time::now();
-  points.ns ="points_and_lines";
+  points.ns ="point";
   points.action = visualization_msgs::Marker::ADD;
   points.pose.orientation.w = 1.0;
   points.id = 0;

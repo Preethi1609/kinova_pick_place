@@ -67,6 +67,17 @@ The project is based on Ubuntu 18.04, ROS Melodic, gazebo 9.0, wstool and catkin
     ```
         rosrun kinova_arm_pick_and_place kinova_arm_pick_and_place_node
     ```
+2. Run the kinova_arm_iksolver_node:
+
+    ```
+        rosrun kinova_arm_iksolver kinova_arm_iksolver_node
+    ```
+3. Run the kinova_arm_reachability_node:
+
+    ```
+        rosrun kinova_arm_reachability kinova_arm_reachability_node 
+    ```
+
  
 
 
