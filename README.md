@@ -60,7 +60,7 @@ The project is based on Ubuntu 18.04, ROS Melodic, gazebo 9.0, wstool and catkin
    This opens Rviz to visualize the kinova arm.
     
 
-### Run the pick and place program
+### Run the programs:
 
 1. Run the kinova_arm_pick_and_place_node:
 

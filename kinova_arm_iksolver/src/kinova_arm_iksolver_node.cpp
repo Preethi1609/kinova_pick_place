@@ -48,10 +48,6 @@ int main(int argc, char** argv)
   points.scale.y = 0.02;
   points.scale.z = 0.02;
 
-  // Points are green
-  points.color.g = 1.0f;
-  points.color.a = 1.0;
-
   double timeout = 0.1;
   bool found_ik;
   geometry_msgs::Pose eef_pose;
@@ -61,8 +57,8 @@ int main(int argc, char** argv)
   eef_pose.orientation.w = 0.15192109315;
   eef_pose.orientation.w = 0.15192109315;
   eef_pose.position.x = 0.0;
-  eef_pose.position.y = 0.5;
-  eef_pose.position.z = 0.4;
+  eef_pose.position.y = 0.4;
+  eef_pose.position.z = 0.6;
 
   geometry_msgs::Point p = eef_pose.position;
   for(uint32_t ik_call=0; ik_call<1;++ik_call){
@@ -71,19 +67,28 @@ int main(int argc, char** argv)
   }
   if (found_ik)
   {
+    ROS_INFO_STREAM("Solution found for x= "<<eef_pose.position.x<<" y= "<<eef_pose.position.y<<" z= "<<eef_pose.position.z<<"\n");
+    points.color.g = 1.0f;
+    points.color.a = 1.0;
     kinematic_state->copyJointGroupPositions(joint_model_group, joint_values);
     for (std::size_t i = 0; i < joint_names.size(); ++i){
       ROS_INFO("Joint %s: %f", joint_names[i].c_str(), joint_values[i]);
     }
     points.points.push_back(p);
     marker_pub.publish(points);
-    ROS_INFO("Published points");
+    ROS_INFO("Published green points");
   }
   else
   {
-    ROS_INFO_STREAM("No solution found\n");
+    ROS_INFO_STREAM("No solution found for x= "<<eef_pose.position.x<<" y= "<<eef_pose.position.y<<" z= "<<eef_pose.position.z<<"\n");
+    points.color.r = 1.0f;
+    points.color.a = 1.0;
+    points.points.push_back(p);
+    marker_pub.publish(points);
+    ROS_INFO("Published red points");
+
   } 
     
-  ros::shutdown();
+  ros::waitForShutdown();
   return 0;
 }
