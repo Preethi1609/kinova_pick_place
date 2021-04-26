@@ -44,6 +44,14 @@
 // MoveIt
 #include <moveit/planning_scene_interface/planning_scene_interface.h>
 #include <moveit/move_group_interface/move_group_interface.h>
+double table1_x = 0.0;
+double table1_y = 0.4;
+double table1_z = 0.05;
+
+double table2_x = -0.3;
+double table2_y = 0.0;
+double table2_z = 0.05;
+double obj_z = table1_z + 0.1;
 
 
   /* This function is used to create the environment, it adds three collision objets: 
@@ -53,26 +61,24 @@ void addCollisionObjects(moveit::planning_interface::PlanningSceneInterface& pla
 
   std::vector<moveit_msgs::CollisionObject> collision_objects;
   collision_objects.resize(3);
-  ROS_INFO_STREAM("Size of collision objects: "<<collision_objects.size());
-
   // Add the first table where the sphere will originally be kept.
   collision_objects[0].id = "table1";
   collision_objects[0].header.frame_id = "root";
 
   /* Define the primitive and its dimensions. */
-  ROS_INFO_STREAM("Size of primitives: "<<collision_objects[0].primitives.size());
   collision_objects[0].primitives.resize(1);
   collision_objects[0].primitives[0].type = collision_objects[0].primitives[0].BOX;
   collision_objects[0].primitives[0].dimensions.resize(3);
   collision_objects[0].primitives[0].dimensions[0] = 0.2;
+  //ROS_INFO_STREAM("Type: "<<typeid(collision_objects[0].primitives[0].dimensions[0]).name());
   collision_objects[0].primitives[0].dimensions[1] = 0.2;
   collision_objects[0].primitives[0].dimensions[2] = 0.1;
 
   /* Define the pose of the table. */
   collision_objects[0].primitive_poses.resize(1);
-  collision_objects[0].primitive_poses[0].position.x = 0.0;
-  collision_objects[0].primitive_poses[0].position.y = 0.4;
-  collision_objects[0].primitive_poses[0].position.z = 0.05;
+  collision_objects[0].primitive_poses[0].position.x = table1_x;
+  collision_objects[0].primitive_poses[0].position.y = table1_y;
+  collision_objects[0].primitive_poses[0].position.z = table1_z;
 
   collision_objects[0].operation = collision_objects[0].ADD;
 
@@ -85,14 +91,20 @@ void addCollisionObjects(moveit::planning_interface::PlanningSceneInterface& pla
   collision_objects[1].primitives[0].type = collision_objects[1].primitives[0].BOX;
   collision_objects[1].primitives[0].dimensions.resize(3);
   collision_objects[1].primitives[0].dimensions[0] = 0.2;
-  collision_objects[1].primitives[0].dimensions[1] = 0.4;
-  collision_objects[1].primitives[0].dimensions[2] = 0.3;
+  collision_objects[1].primitives[0].dimensions[1] = 0.2;
+  collision_objects[1].primitives[0].dimensions[2] = 0.1;
+
+  //collision_objects[1].primitives[0].dimensions[2] = 0.3;
 
   /* Define the pose of the table. */
   collision_objects[1].primitive_poses.resize(1);
-  collision_objects[1].primitive_poses[0].position.x = 0.265849787727;
-  collision_objects[1].primitive_poses[0].position.y = -0.212182493;
-  collision_objects[1].primitive_poses[0].position.z = 0.15;
+  collision_objects[1].primitive_poses[0].position.x = table2_x;
+  collision_objects[1].primitive_poses[0].position.y = table2_y;
+  collision_objects[1].primitive_poses[0].position.z = table2_z;
+
+  //collision_objects[1].primitive_poses[0].position.x = 0.265849787727;
+  //collision_objects[1].primitive_poses[0].position.y = -0.212182493;
+  //collision_objects[1].primitive_poses[0].position.z = 0.15;
 
   collision_objects[1].operation = collision_objects[1].ADD;
 
@@ -108,9 +120,9 @@ void addCollisionObjects(moveit::planning_interface::PlanningSceneInterface& pla
 
   /* Define the pose of the object. */
   collision_objects[2].primitive_poses.resize(1);
-  collision_objects[2].primitive_poses[0].position.x = 0.0;
-  collision_objects[2].primitive_poses[0].position.y = 0.4;
-  collision_objects[2].primitive_poses[0].position.z = 0.15;
+  collision_objects[2].primitive_poses[0].position.x = table1_x;
+  collision_objects[2].primitive_poses[0].position.y = table1_y;
+  collision_objects[2].primitive_poses[0].position.z = obj_z;
 
   collision_objects[2].operation = collision_objects[2].ADD;
 
@@ -129,8 +141,8 @@ geometry_msgs::Pose moveToPreGraspPose(moveit::planning_interface::MoveGroupInte
   eef_pose_pre_grasp.orientation.y = -0.0275425709658;
   eef_pose_pre_grasp.orientation.z = -0.00145792044579;
   eef_pose_pre_grasp.orientation.w = 0.15192109315;
-  eef_pose_pre_grasp.position.x = 0.0;
-  eef_pose_pre_grasp.position.y = 0.4;
+  eef_pose_pre_grasp.position.x = table1_x;
+  eef_pose_pre_grasp.position.y = table1_y;
   eef_pose_pre_grasp.position.z = 0.6;
   //good values
   //eef_pose.position.x = 0.0;
@@ -138,12 +150,15 @@ geometry_msgs::Pose moveToPreGraspPose(moveit::planning_interface::MoveGroupInte
   //eef_pose.position.z = 0.4;
   arm_group.setPoseTarget(eef_pose_pre_grasp);
 
-  moveit::planning_interface::MoveGroupInterface::Plan my_plan;
-  arm_group.plan(my_plan);
+  moveit::planning_interface::MoveGroupInterface::Plan my_plan_pre_grasp;
+  arm_group.plan(my_plan_pre_grasp);
   arm_group.move();
   return eef_pose_pre_grasp;
 
 }
+
+ /* This function is used move the end effector of the arm 
+  closer to the grasp position. */
 
 void graspPose(moveit::planning_interface::MoveGroupInterface& arm_group, geometry_msgs::Pose& eef_pose_pre_grasp){
 
@@ -164,7 +179,7 @@ void graspPose(moveit::planning_interface::MoveGroupInterface& arm_group, geomet
   my_plan_grasp.trajectory_ = trajectory;
   arm_group.execute(my_plan_grasp);
 
-  ROS_INFO_STREAM("Executing Cartesian path");
+  ROS_INFO_STREAM("Executing Cartesian path for pick");
 
 }
 
@@ -180,30 +195,60 @@ void closeGripper(moveit::planning_interface::MoveGroupInterface& gripper_group)
 /* This function is used to attach an object to the arm, by default it attaches it to the end-effector link */
 
 void attachingObject(moveit::planning_interface::MoveGroupInterface& arm_group){
-  arm_group.setMaxVelocityScalingFactor(0.1);
   arm_group.attachObject("object");
   ROS_INFO_STREAM("Attaching the object");
 
 }
-/* This function is used move the end effector of the arm towards the second table
+/* This function is used move the end effector of the arm above the second table
     on which the object has to be placed. */
 
-void moveToPlacePose(moveit::planning_interface::MoveGroupInterface& arm_group){
+geometry_msgs::Pose moveToPrePlacePose(moveit::planning_interface::MoveGroupInterface& arm_group){
   ROS_INFO_STREAM("Moving towards the other table");
-  geometry_msgs::Pose eef_pose1;
-  eef_pose1.orientation.x = -0.988008788921;
-  eef_pose1.orientation.y = -0.0275425709658;
-  eef_pose1.orientation.z = -0.00145792044579;
-  eef_pose1.orientation.w = 0.15192109315;
-  eef_pose1.position.x = 0.265849787727;
-  eef_pose1.position.y = -0.212182493;
-  eef_pose1.position.z = 0.4;
-  arm_group.setPoseTarget(eef_pose1);
-  moveit::planning_interface::MoveGroupInterface::Plan my_plan1;
-  arm_group.plan(my_plan1);
+  geometry_msgs::Pose eef_pose_pre_place;
+  eef_pose_pre_place.orientation.x = -0.988008788921;
+  eef_pose_pre_place.orientation.y = -0.0275425709658;
+  eef_pose_pre_place.orientation.z = -0.00145792044579;
+  eef_pose_pre_place.orientation.w = 0.15192109315;
+  eef_pose_pre_place.position.x = table2_x;
+  eef_pose_pre_place.position.y = table2_y;
+  eef_pose_pre_place.position.z = 0.5;
+
+  //Move to place pose
+  //eef_pose1.position.x = 0.265849787727;
+  //eef_pose1.position.y = -0.212182493;
+  //eef_pose1.position.z = 0.4;
+  arm_group.setMaxVelocityScalingFactor(1.0);
+  arm_group.setPoseTarget(eef_pose_pre_place);
+  moveit::planning_interface::MoveGroupInterface::Plan my_plan_pre_place;
+  arm_group.plan(my_plan_pre_place);
   arm_group.move();
+  return eef_pose_pre_place;
 
 }
+
+/* This function is used move the end effector of the arm 
+  closer to the grasp position. */
+void placePose(moveit::planning_interface::MoveGroupInterface& arm_group, geometry_msgs::Pose& eef_pose_pre_place){
+  ROS_INFO_STREAM("Moving towards place pose");
+  std::vector<geometry_msgs::Pose> waypoints;
+  waypoints.push_back(eef_pose_pre_place);
+  geometry_msgs::Pose eef_pose_place = eef_pose_pre_place;
+  eef_pose_place.position.z -= 0.3;                            //Moving down by 30cm so z = 0.2
+  waypoints.push_back(eef_pose_place);
+  arm_group.setPoseTarget(eef_pose_place);
+  arm_group.setMaxVelocityScalingFactor(0.1); //Cartesian motions needs to be slower 
+
+  moveit_msgs::RobotTrajectory trajectory;
+  const double jump_threshold = 0.0;
+  const double eef_step = 0.01;
+  arm_group.computeCartesianPath(waypoints, eef_step, jump_threshold, trajectory);
+  moveit::planning_interface::MoveGroupInterface::Plan my_plan_place;
+  my_plan_place.trajectory_ = trajectory;
+  arm_group.execute(my_plan_place);
+
+  ROS_INFO_STREAM("Executing Cartesian path for place");
+}
+
 /* This function is used to detach the object from the arm. */
 
 void detachingObject(moveit::planning_interface::MoveGroupInterface& arm_group){
@@ -226,6 +271,7 @@ void openGripper(moveit::planning_interface::MoveGroupInterface& gripper_group){
   Moveit Setup Assistant. */
 
 void moveToInitialPose(moveit::planning_interface::MoveGroupInterface& arm_group){
+  arm_group.setMaxVelocityScalingFactor(1.0);
   arm_group.setNamedTarget("Vertical");
   ROS_INFO_STREAM("Moving to home position");
   arm_group.move();
@@ -260,15 +306,17 @@ int main(int argc, char** argv)
 
   attachingObject(arm_group);
 
-  moveToPlacePose(arm_group);
+  geometry_msgs::Pose eef_pose_pre_place = moveToPrePlacePose(arm_group);
 
-  //detachingObject(arm_group);
+  placePose(arm_group, eef_pose_pre_place);
 
-  //openGripper(gripper_group);
+  detachingObject(arm_group);
 
-  //moveToInitialPose(arm_group);
+  openGripper(gripper_group);
+
+  moveToInitialPose(arm_group);
   
-  ros::waitForShutdown();
+  ros::shutdown();
   return 0;
 }
 
