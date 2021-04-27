@@ -47,6 +47,7 @@
 double table1_x = 0.0;
 double table1_y = 0.4;
 double table1_z = 0.05;
+//pick position z coordinate will be table1z-
 
 double table2_x = -0.3;
 double table2_y = 0.0;
@@ -295,6 +296,13 @@ int main(int argc, char** argv)
   moveit::planning_interface::MoveGroupInterface arm_group("arm");
   
   moveit::planning_interface::MoveGroupInterface gripper_group("gripper");
+
+  ROS_INFO_STREAM("Planner id arm:"<<arm_group.getDefaultPlannerId("arm"));
+
+  ROS_INFO_STREAM("Planner id gripper:"<<arm_group.getDefaultPlannerId("gripper"));
+
+  //arm_group.setPlannerId("PRM");
+  //gripper_group.setPlannerId("RRTstar");
 
   addCollisionObjects(planning_scene_interface);
 
