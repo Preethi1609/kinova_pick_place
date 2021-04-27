@@ -106,10 +106,10 @@ double to_grasp = 0.2;
 // double to_place = 0.4;
 
 //Place location 2
-// double table2_x = -0.3;
-// double table2_y = 0.0;
-// double pre_place_z = 0.5;
-// double to_place = 0.3;
+double table2_x = -0.3;
+double table2_y = 0.0;
+double pre_place_z = 0.5;
+double to_place = 0.3;
 
 //Place location 3 (right next to location 1)
 // double table2_x = 0;
@@ -124,10 +124,10 @@ double to_grasp = 0.2;
 // double to_place = 0.2;
 
 //Place location 5
-double table2_x = 0.25;
-double table2_y = 0.25;
-double pre_place_z = 0.6;
-double to_place = 0.4;
+// double table2_x = 0.25;
+// double table2_y = 0.25;
+// double pre_place_z = 0.6;
+// double to_place = 0.4;
 
 //Place location 6
 // double table2_x = -0.25;
@@ -246,6 +246,7 @@ geometry_msgs::Pose moveToPreGraspPose(moveit::planning_interface::MoveGroupInte
 
     ros::shutdown();
   }
+  //arm_group.execute(my_plan_pre_grasp);
   arm_group.move();
   return eef_pose_pre_grasp;
 
@@ -269,10 +270,12 @@ void graspPose(moveit::planning_interface::MoveGroupInterface& arm_group, geomet
   moveit_msgs::RobotTrajectory trajectory;
   const double jump_threshold = 0.0;
   const double eef_step = 0.01;
-  arm_group.computeCartesianPath(waypoints, eef_step, jump_threshold, trajectory);
+  const bool avoid_collisions=true;
+  arm_group.computeCartesianPath(waypoints, eef_step, jump_threshold, trajectory, avoid_collisions);
   moveit::planning_interface::MoveGroupInterface::Plan my_plan_grasp;
   my_plan_grasp.trajectory_ = trajectory;
-  arm_group.execute(my_plan_grasp);
+  arm_group.move();
+  //arm_group.execute(my_plan_grasp);
   ROS_INFO_STREAM("Executing Cartesian path for pick");
 
 }
@@ -338,10 +341,12 @@ void placePose(moveit::planning_interface::MoveGroupInterface& arm_group, geomet
   moveit_msgs::RobotTrajectory trajectory;
   const double jump_threshold = 0.0;
   const double eef_step = 0.01;
-  arm_group.computeCartesianPath(waypoints, eef_step, jump_threshold, trajectory);
+  const bool avoid_collisions=true;
+  arm_group.computeCartesianPath(waypoints, eef_step, jump_threshold, trajectory, avoid_collisions);
   moveit::planning_interface::MoveGroupInterface::Plan my_plan_place;
   my_plan_place.trajectory_ = trajectory;
-  arm_group.execute(my_plan_place);
+  arm_group.move();
+  //arm_group.execute(my_plan_place);
 
   ROS_INFO_STREAM("Executing Cartesian path for place");
 }
