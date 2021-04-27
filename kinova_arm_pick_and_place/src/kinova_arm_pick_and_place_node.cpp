@@ -68,18 +68,42 @@ double obj_z = table1_z + 0.1;
 // double pre_grasp_z = 0.4;
 // double to_grasp = 0.2;
 
-//Pick location 4
+//Pick location 4 (4 and 5 clean cartesian path)
 double table1_x = 0.265849787727;
 double table1_y = -0.212182493;
 double pre_grasp_z = 0.4;
 double to_grasp = 0.2;
 
+//Pick location 5
+// double table1_x = 0.25;
+// double table1_y = 0.25;
+// double pre_grasp_z = 0.6;
+// double to_grasp = 0.4;
+
+//Pick location 6
+// double table1_x = -0.25;
+// double table1_y = 0.25;
+// double pre_grasp_z = 0.6;
+// double to_grasp = 0.4;
+
+//Pick location 7
+// double table1_x = 0;
+// double table1_y = 0.3;
+// double pre_grasp_z = 0.6;
+// double to_grasp = 0.4;
+
+//Pick location 8 NO MOTION PLAN FOUND... FOR ERROR HANDLING
+// double table1_x = 0.25;
+// double table1_y = 0;
+// double pre_grasp_z = 0.6;
+// double to_grasp = 0.4;
+
 /* #############################PLACE LOCATIONS(UNCOMMENT ANY ONE, SHOULD BE DIFFERENT FROM PICK LOCATION)###########################*/
 //Place location 1
-double table2_x = 0.0;
-double table2_y = 0.4;
-double pre_place_z = 0.6;
-double to_place = 0.4;
+// double table2_x = 0.0;
+// double table2_y = 0.4;
+// double pre_place_z = 0.6;
+// double to_place = 0.4;
 
 //Place location 2
 // double table2_x = -0.3;
@@ -93,11 +117,35 @@ double to_place = 0.4;
 // double pre_place_z = 0.4;
 // double to_place = 0.2;
 
-//Pick location 4
+//Place location 4
 // double table2_x = 0.265849787727;
 // double table2_y = -0.212182493;
 // double pre_place_z = 0.4;
 // double to_place = 0.2;
+
+//Place location 5
+double table2_x = 0.25;
+double table2_y = 0.25;
+double pre_place_z = 0.6;
+double to_place = 0.4;
+
+//Place location 6
+// double table2_x = -0.25;
+// double table2_y = 0.25;
+// double pre_place_z = 0.6;
+// double to_place = 0.4;
+
+//Place location 7
+// double table2_x = 0;
+// double table2_y = 0.3;
+// double pre_place_z = 0.6;
+// double to_place = 0.4;
+
+//Place location 8 NO MOTION PLAN FOUND... FOR ERROR HANDLING
+// double table2_x = 0.25;
+// double table2_y = 0;
+// double pre_place_z = 0.6;
+// double to_place = 0.4;
 
 
 
@@ -149,10 +197,6 @@ void addCollisionObjects(moveit::planning_interface::PlanningSceneInterface& pla
   collision_objects[1].primitive_poses[0].position.y = table2_y;
   collision_objects[1].primitive_poses[0].position.z = table2_z;
 
-  //collision_objects[1].primitive_poses[0].position.x = 0.265849787727;
-  //collision_objects[1].primitive_poses[0].position.y = -0.212182493;
-  //collision_objects[1].primitive_poses[0].position.z = 0.15;
-
   collision_objects[1].operation = collision_objects[1].ADD;
 
   // Define the object that we will be manipulating
@@ -191,14 +235,17 @@ geometry_msgs::Pose moveToPreGraspPose(moveit::planning_interface::MoveGroupInte
   eef_pose_pre_grasp.position.x = table1_x;
   eef_pose_pre_grasp.position.y = table1_y;
   eef_pose_pre_grasp.position.z = pre_grasp_z;
-  //good values
-  //eef_pose_pre_grasp.position.x = 0.0;
-  //eef_pose_pre_grasp.position.y = 0.5;
-  //eef_pose_pre_grasp.position.z = 0.4;
+
   arm_group.setPoseTarget(eef_pose_pre_grasp);
 
   moveit::planning_interface::MoveGroupInterface::Plan my_plan_pre_grasp;
-  arm_group.plan(my_plan_pre_grasp);
+  bool success = (arm_group.plan(my_plan_pre_grasp) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
+  if(success == 0){
+    ROS_INFO_STREAM("No motion plan found to pre-grasp pose");
+    ROS_INFO_STREAM("Shutting down...");
+
+    ros::shutdown();
+  }
   arm_group.move();
   return eef_pose_pre_grasp;
 
@@ -213,8 +260,8 @@ void graspPose(moveit::planning_interface::MoveGroupInterface& arm_group, geomet
   std::vector<geometry_msgs::Pose> waypoints;
   waypoints.push_back(eef_pose_pre_grasp);
   geometry_msgs::Pose eef_pose_grasp = eef_pose_pre_grasp;
-  eef_pose_grasp.position.z -= to_grasp;                            //Moving down by 40cm so z = 0.2
-  //eef_pose_grasp.position.z -= 0.2;
+  eef_pose_grasp.position.z -= to_grasp;                            //Moving down 
+
   waypoints.push_back(eef_pose_grasp);
   arm_group.setPoseTarget(eef_pose_grasp);
   arm_group.setMaxVelocityScalingFactor(0.1); //Cartesian motions needs to be slower 
@@ -226,7 +273,6 @@ void graspPose(moveit::planning_interface::MoveGroupInterface& arm_group, geomet
   moveit::planning_interface::MoveGroupInterface::Plan my_plan_grasp;
   my_plan_grasp.trajectory_ = trajectory;
   arm_group.execute(my_plan_grasp);
-
   ROS_INFO_STREAM("Executing Cartesian path for pick");
 
 }
@@ -261,14 +307,16 @@ geometry_msgs::Pose moveToPrePlacePose(moveit::planning_interface::MoveGroupInte
   eef_pose_pre_place.position.y = table2_y;
   eef_pose_pre_place.position.z = pre_place_z;
 
-  //Move to place pose
-  //eef_pose_pre_place.position.x = 0.265849787727;
-  //eef_pose_pre_place.position.y = -0.212182493;
-  //eef_pose_pre_place.position.z = 0.4;
   arm_group.setMaxVelocityScalingFactor(1.0);
   arm_group.setPoseTarget(eef_pose_pre_place);
   moveit::planning_interface::MoveGroupInterface::Plan my_plan_pre_place;
-  arm_group.plan(my_plan_pre_place);
+  bool success = (arm_group.plan(my_plan_pre_place) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
+  if(success == 0){
+    ROS_INFO_STREAM("No motion plan found to pre-place pose");
+    ROS_INFO_STREAM("Shutting down...");
+
+    ros::shutdown();
+  }
   arm_group.move();
   return eef_pose_pre_place;
 
@@ -281,8 +329,8 @@ void placePose(moveit::planning_interface::MoveGroupInterface& arm_group, geomet
   std::vector<geometry_msgs::Pose> waypoints;
   waypoints.push_back(eef_pose_pre_place);
   geometry_msgs::Pose eef_pose_place = eef_pose_pre_place;
-  eef_pose_place.position.z -= to_place;                            //Moving down by 30cm so z = 0.2
-  //eef_pose_place.position.z -= 0.2;
+  eef_pose_place.position.z -= to_place;                            //Moving down 
+
   waypoints.push_back(eef_pose_place);
   arm_group.setPoseTarget(eef_pose_place);
   arm_group.setMaxVelocityScalingFactor(0.1); //Cartesian motions needs to be slower 
