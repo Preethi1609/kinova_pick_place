@@ -44,15 +44,61 @@
 // MoveIt
 #include <moveit/planning_scene_interface/planning_scene_interface.h>
 #include <moveit/move_group_interface/move_group_interface.h>
-double table1_x = 0.0;
-double table1_y = 0.4;
-double table1_z = 0.05;
-//pick position z coordinate will be table1z-
 
-double table2_x = -0.3;
-double table2_y = 0.0;
+double table1_z = 0.05;
 double table2_z = 0.05;
 double obj_z = table1_z + 0.1;
+
+/* ##########################################PICK LOCATIONS(UNCOMMENT ANY ONE)###################################################*/
+//Pick location 1
+// double table1_x = 0.0;
+// double table1_y = 0.4;
+// double pre_grasp_z = 0.6;
+// double to_grasp = 0.4;
+
+//Pick location 2
+// double table1_x = -0.3;
+// double table1_y = 0.0;
+// double pre_grasp_z = 0.5;
+// double to_grasp = 0.3;
+
+//Pick location 3 (right next to location 1)
+// double table1_x = 0;
+// double table1_y = 0.5;
+// double pre_grasp_z = 0.4;
+// double to_grasp = 0.2;
+
+//Pick location 4
+double table1_x = 0.265849787727;
+double table1_y = -0.212182493;
+double pre_grasp_z = 0.4;
+double to_grasp = 0.2;
+
+/* #############################PLACE LOCATIONS(UNCOMMENT ANY ONE, SHOULD BE DIFFERENT FROM PICK LOCATION)###########################*/
+//Place location 1
+double table2_x = 0.0;
+double table2_y = 0.4;
+double pre_place_z = 0.6;
+double to_place = 0.4;
+
+//Place location 2
+// double table2_x = -0.3;
+// double table2_y = 0.0;
+// double pre_place_z = 0.5;
+// double to_place = 0.3;
+
+//Place location 3 (right next to location 1)
+// double table2_x = 0;
+// double table2_y = 0.5;
+// double pre_place_z = 0.4;
+// double to_place = 0.2;
+
+//Pick location 4
+// double table2_x = 0.265849787727;
+// double table2_y = -0.212182493;
+// double pre_place_z = 0.4;
+// double to_place = 0.2;
+
 
 
   /* This function is used to create the environment, it adds three collision objets: 
@@ -144,11 +190,11 @@ geometry_msgs::Pose moveToPreGraspPose(moveit::planning_interface::MoveGroupInte
   eef_pose_pre_grasp.orientation.w = 0.15192109315;
   eef_pose_pre_grasp.position.x = table1_x;
   eef_pose_pre_grasp.position.y = table1_y;
-  eef_pose_pre_grasp.position.z = 0.6;
+  eef_pose_pre_grasp.position.z = pre_grasp_z;
   //good values
-  //eef_pose.position.x = 0.0;
-  //eef_pose.position.y = 0.5;
-  //eef_pose.position.z = 0.4;
+  //eef_pose_pre_grasp.position.x = 0.0;
+  //eef_pose_pre_grasp.position.y = 0.5;
+  //eef_pose_pre_grasp.position.z = 0.4;
   arm_group.setPoseTarget(eef_pose_pre_grasp);
 
   moveit::planning_interface::MoveGroupInterface::Plan my_plan_pre_grasp;
@@ -167,7 +213,8 @@ void graspPose(moveit::planning_interface::MoveGroupInterface& arm_group, geomet
   std::vector<geometry_msgs::Pose> waypoints;
   waypoints.push_back(eef_pose_pre_grasp);
   geometry_msgs::Pose eef_pose_grasp = eef_pose_pre_grasp;
-  eef_pose_grasp.position.z -= 0.4;                            //Moving down by 40cm so z = 0.2
+  eef_pose_grasp.position.z -= to_grasp;                            //Moving down by 40cm so z = 0.2
+  //eef_pose_grasp.position.z -= 0.2;
   waypoints.push_back(eef_pose_grasp);
   arm_group.setPoseTarget(eef_pose_grasp);
   arm_group.setMaxVelocityScalingFactor(0.1); //Cartesian motions needs to be slower 
@@ -212,12 +259,12 @@ geometry_msgs::Pose moveToPrePlacePose(moveit::planning_interface::MoveGroupInte
   eef_pose_pre_place.orientation.w = 0.15192109315;
   eef_pose_pre_place.position.x = table2_x;
   eef_pose_pre_place.position.y = table2_y;
-  eef_pose_pre_place.position.z = 0.5;
+  eef_pose_pre_place.position.z = pre_place_z;
 
   //Move to place pose
-  //eef_pose1.position.x = 0.265849787727;
-  //eef_pose1.position.y = -0.212182493;
-  //eef_pose1.position.z = 0.4;
+  //eef_pose_pre_place.position.x = 0.265849787727;
+  //eef_pose_pre_place.position.y = -0.212182493;
+  //eef_pose_pre_place.position.z = 0.4;
   arm_group.setMaxVelocityScalingFactor(1.0);
   arm_group.setPoseTarget(eef_pose_pre_place);
   moveit::planning_interface::MoveGroupInterface::Plan my_plan_pre_place;
@@ -234,7 +281,8 @@ void placePose(moveit::planning_interface::MoveGroupInterface& arm_group, geomet
   std::vector<geometry_msgs::Pose> waypoints;
   waypoints.push_back(eef_pose_pre_place);
   geometry_msgs::Pose eef_pose_place = eef_pose_pre_place;
-  eef_pose_place.position.z -= 0.3;                            //Moving down by 30cm so z = 0.2
+  eef_pose_place.position.z -= to_place;                            //Moving down by 30cm so z = 0.2
+  //eef_pose_place.position.z -= 0.2;
   waypoints.push_back(eef_pose_place);
   arm_group.setPoseTarget(eef_pose_place);
   arm_group.setMaxVelocityScalingFactor(0.1); //Cartesian motions needs to be slower 
