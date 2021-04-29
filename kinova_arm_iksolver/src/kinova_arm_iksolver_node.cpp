@@ -93,13 +93,13 @@ int main(int argc, char** argv)
   eef_pose.orientation.y = -0.0275425709658;
   eef_pose.orientation.z = -0.00145792044579;
   eef_pose.orientation.w = 0.15192109315;
-  eef_pose.orientation.w = 0.15192109315;
-  eef_pose.position.x = 0.25;
-  eef_pose.position.y = -0.25;
+  
+  eef_pose.position.x = -0.15;
+  eef_pose.position.y = 0.25;
   eef_pose.position.z = 0.2;
 
   geometry_msgs::Point p = eef_pose.position;
-  for(uint32_t ik_call=0; ik_call<1;++ik_call){
+  for(uint32_t ik_call=0; ik_call<5;++ik_call){
     found_ik = kinematic_state->setFromIK(joint_model_group, eef_pose, timeout);
     if(found_ik) break;
   }
