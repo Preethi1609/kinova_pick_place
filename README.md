@@ -77,7 +77,11 @@ The project is based on Ubuntu 18.04, ROS Melodic, gazebo 9.0, wstool and catkin
     ```
         rosrun kinova_arm_reachability kinova_arm_reachability_node 
     ```
+4. Run the configuration_space_disatance_node:
 
+    ```
+        rosrun configuration_space_distance configuration_space_distance_node 
+    ```
  
 
 
