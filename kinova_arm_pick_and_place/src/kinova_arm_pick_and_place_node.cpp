@@ -357,16 +357,43 @@ void graspPose(moveit::planning_interface::MoveGroupInterface& arm_group, geomet
   test_constraints.orientation_constraints.push_back(ocm);
 
   moveit_msgs::RobotTrajectory trajectory;
-  //trajectory_msgs::JointTrajectory joint_trajectory
+
+  trajectory_msgs::JointTrajectory  joint_trajectory;
+
+  std::vector<std::string> joint_names;
+  std::vector<trajectory_msgs::JointTrajectoryPoint> points;
+
+  std::vector<float> positions;
+  std::vector<float> joint_distances;
+  joint_distances.resize(7);
+
   const double jump_threshold = 0.0;
   const double eef_step = 0.01;
   const bool avoid_collisions=true;
+  
 
   // Uncomment for Cartesian Path without constraints
   //double fraction = arm_group.computeCartesianPath(waypoints, eef_step, jump_threshold, trajectory, avoid_collisions);
 
   //Cartesian path with constraints
   double fraction = arm_group.computeCartesianPath(waypoints, eef_step, jump_threshold, trajectory, test_constraints, avoid_collisions);
+  //std::cout <<"The whole joint trajectory : "<< trajectory.joint_trajectory << std::endl;
+
+  std::cout <<"Only point 21 position 0: "<< trajectory.joint_trajectory.points[21].positions[0] << std::endl;
+  //std::cout<<"no of points"<<trajectory.joint_trajectory.points.size(); is 23
+  //std::cout<<"no of joints"<<trajectory.joint_trajectory.joint_names.size(); is 7
+  for(uint32_t j = 0; j < 7; ++j){
+
+    for (uint32_t i = 0; i < 23; ++i){
+      
+      joint_distances[j] =0;
+      //ROS_INFO_STREAM(trajectory.joint_trajectory.points[j].positions[i]);
+      std::cout<<"Joint "<<j+1<<" cartesian point "<<i<<" : "<<trajectory.joint_trajectory.points[i].positions[j]<<"\n";
+    }
+
+    std::cout<<"Distance travelled by "<<trajectory.joint_trajectory.joint_names[j]<<" is "<<joint_distances[j]<<"\n";
+  }
+
   ROS_INFO("Visualizing plan to pick (Cartesian path) (%.2f%% acheived)", fraction * 100.0);
   if(fraction < 1.0){
     ROS_INFO_STREAM("No Cartesian path found to grasp pose");
@@ -456,6 +483,16 @@ void placePose(moveit::planning_interface::MoveGroupInterface& arm_group, geomet
   test_constraints.orientation_constraints.push_back(ocm);
 
   moveit_msgs::RobotTrajectory trajectory;
+
+  trajectory_msgs::JointTrajectory  joint_trajectory;
+
+  std::vector<std::string> joint_names;
+  std::vector<trajectory_msgs::JointTrajectoryPoint> points;
+
+  std::vector<float> positions;
+  std::vector<float> joint_distances;
+  joint_distances.resize(7);
+
   const double jump_threshold = 0.0;
   const double eef_step = 0.01;
   const bool avoid_collisions=true;
@@ -465,7 +502,27 @@ void placePose(moveit::planning_interface::MoveGroupInterface& arm_group, geomet
 
   //Cartesian path with constraints
   double fraction = arm_group.computeCartesianPath(waypoints, eef_step, jump_threshold, trajectory, test_constraints, avoid_collisions);
+
+  //std::cout <<"The whole joint trajectory : "<< trajectory.joint_trajectory << std::endl;
+
+  //std::cout <<"Only point 21 position 0: "<< trajectory.joint_trajectory.points[21].positions[0] << std::endl;
+  std::cout<<"no of points"<<trajectory.joint_trajectory.points.size(); //is 21
+  std::cout<<"no of joints"<<trajectory.joint_trajectory.joint_names.size(); //is 7
+  for(uint32_t j = 0; j < 7; ++j){
+
+    for (uint32_t i = 0; i < 21; ++i){
+      
+      joint_distances[j] =0;
+      //ROS_INFO_STREAM(trajectory.joint_trajectory.points[j].positions[i]);
+      std::cout<<"Joint "<<j+1<<" cartesian point "<<i<<" : "<<trajectory.joint_trajectory.points[i].positions[j]<<"\n";
+    }
+
+    std::cout<<"Distance travelled by "<<trajectory.joint_trajectory.joint_names[j]<<" is "<<joint_distances[j]<<"\n";
+  }
+
+
   ROS_INFO("Visualizing plan to place (Cartesian path) (%.2f%% acheived)", fraction * 100.0);
+
   if(fraction < 1.0){
     ROS_INFO_STREAM("No Cartesian path found to grasp pose");
     ROS_INFO_STREAM("Shutting down...");
