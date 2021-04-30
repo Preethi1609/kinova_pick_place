@@ -44,7 +44,6 @@
 #include <moveit/robot_model/robot_model.h>
 #include <moveit/robot_state/robot_state.h>
 #include <visualization_msgs/Marker.h>
-#include <cmath>
 
 int main(int argc, char** argv)
 {
@@ -66,13 +65,6 @@ int main(int argc, char** argv)
   //Kinematic state also used in IK call
   robot_state::RobotStatePtr kinematic_state(new robot_state::RobotState(kinematic_model));
   kinematic_state->setToDefaultValues();
-
-  //Joint values used to print out IK solution when it is found
-  std::vector<double> joint_values;
-  kinematic_state->copyJointGroupPositions(joint_model_group, joint_values);
-
-  //Joint names used to print out IK solution when it is found
-  const std::vector<std::string>& joint_names = joint_model_group->getVariableNames();
 
   while (ros::ok())
   {
@@ -106,24 +98,25 @@ int main(int argc, char** argv)
           eef_pose.orientation.y = -0.0275425709658;
           eef_pose.orientation.z = -0.00145792044579;
           eef_pose.orientation.w = 0.15192109315;
-          eef_pose.position.x = 0.5 - i/20.0;
+
+          //Uncomment to get area around the arm
+          // eef_pose.position.x = 0.5 - i/20.0;
+          // eef_pose.position.y = 0.5 - j/20.0;
+          // eef_pose.position.z = k/20.0;
+
+          //Uncomment to get the area in front of the arm
+          eef_pose.position.x = 0.0 - i/20.0;
           eef_pose.position.y = 0.5 - j/20.0;
           eef_pose.position.z = k/20.0;
-          //Uncomment to get the area in front of the arm
-          //eef_pose.position.x = 0.0 - i/20.0;
-          //eef_pose.position.y = 0.5 - j/20.0;
-          //eef_pose.position.z = k/20.0;
       
           geometry_msgs::Point p = eef_pose.position;
-          for(uint32_t ik_call=0; ik_call<1;++ik_call){
+          for(uint32_t ik_call=0; ik_call<5;++ik_call){
             found_ik = kinematic_state->setFromIK(joint_model_group, eef_pose, timeout);
             if(found_ik) break;
-          }eef_pose.position.x = 0.0 - i/20.0;
-          eef_pose.position.y = 0.5 - j/20.0;
-          eef_pose.position.z = k/20.0;
+          }
           if (found_ik)
           {
-            ROS_INFO_STREAM("Solution found for no.:i="<<i<<" j="<<j<<" k="<<k<<"\n");
+            ROS_INFO_STREAM("Solution found for no.:x="<<eef_pose.position.x<<" y="<<eef_pose.position.y<<" z="<<eef_pose.position.z<<"\n");
             points.color.g = 1.0f;
             points.color.a = 1.0;
             points.points.push_back(p);
@@ -131,17 +124,16 @@ int main(int argc, char** argv)
           }
           else
           {
-            ROS_INFO_STREAM("No solution found for no.:i="<<i<<" j="<<j<<" k="<<k<<"\n");
-            //Uncomment to visualize the whole space in yellow
-            //points.color.r = 1.0f;
-            //points.color.a = 1.0;
-            //points.points.push_back(p);
-            //marker_pub.publish(points);
+            ROS_INFO_STREAM("No solution found for no.:x="<<eef_pose.position.x<<" y="<<eef_pose.position.y<<" z="<<eef_pose.position.z<<"\n");
+            // Uncomment to visualize the whole space in yellow
+            // points.color.r = 1.0f;
+            // points.color.a = 1.0;
+            // points.points.push_back(p);
+            // marker_pub.publish(points);
           }          
         }
       }
     }
-    r.sleep();
   }
   
   ros::shutdown();
