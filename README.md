@@ -67,10 +67,7 @@ The project is based on Ubuntu 18.04, ROS Melodic, wstool and catkin tools. Link
         rosrun kinova_arm_pick_and_place kinova_arm_pick_and_place_node
     ```
 	Note: Uncomment any pick/place location from the list of 12 different positions 
-	Cartesian path without constraints can be successfully computed for the first 10 locations
-	Uncomment line 389 and line 516 and comment lines 392 and 519 for Cartesian path without constraints
-	For Cartesian path with constraints, in case a path can't be computed the program is aborted.
-
+	
 2. Run the kinova_arm_iksolver_node:
 
     ```
