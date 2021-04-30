@@ -50,33 +50,33 @@ double table2_z = 0.05;
 double obj_z = table1_z + 0.1;
 
 /* ##########################################PICK LOCATIONS(UNCOMMENT ANY ONE)###################################################*/
-//Pick location 1 (1 and 2 no cartesian path found)
+//Pick location 1 
 // double table1_x = 0.0;
 // double table1_y = 0.4;
 // double pre_grasp_z = 0.6;
 // double to_grasp = 0.4;
 // uint32_t pick_location = 1;
 
-//Pick location 2   (unusual)
+//Pick location 2  
 // double table1_x = -0.3;
 // double table1_y = 0.0;
 // double pre_grasp_z = 0.5;
 // double to_grasp = 0.3;
 // uint32_t pick_location = 2;
 
-//Pick location 3 (right next to location 1)
-double table1_x = 0;
-double table1_y = 0.5;
-double pre_grasp_z = 0.4;
-double to_grasp = 0.2;
-uint32_t pick_location = 3;
-
-//Pick location 4 (4 clean cartesian path)
-// double table1_x = 0.265849787727;
-// double table1_y = -0.212182493;
+//Pick location 3 
+// double table1_x = 0;
+// double table1_y = 0.5;
 // double pre_grasp_z = 0.4;
 // double to_grasp = 0.2;
-// uint32_t pick_location = 4;
+// uint32_t pick_location = 3;
+
+//Pick location 4
+double table1_x = 0.265849787727;
+double table1_y = -0.212182493;
+double pre_grasp_z = 0.4;
+double to_grasp = 0.2;
+uint32_t pick_location = 4;
 
 //Pick location 5
 // double table1_x = 0.25;
@@ -134,6 +134,13 @@ uint32_t pick_location = 3;
 // double to_grasp = 0.4;
 // uint32_t pick_location = 12;
 
+//Pick location 13 ERROR HANDLING
+// double table1_x = -0.3;
+// double table1_y = 0.3;
+// double pre_grasp_z = 0.6;
+// double to_grasp = 0.5;
+// uint32_t pick_location = 13;
+
 /* #############################PLACE LOCATIONS(UNCOMMENT ANY ONE, SHOULD BE DIFFERENT FROM PICK LOCATION)###########################*/
 //Place location 1
 // double table2_x = 0.0;
@@ -149,7 +156,7 @@ uint32_t pick_location = 3;
 // double to_place = 0.3;
 // uint32_t place_location = 2;
 
-//Place location 3 (right next to location 1)
+//Place location 3
 // double table2_x = 0;
 // double table2_y = 0.5;
 // double pre_place_z = 0.4;
@@ -157,18 +164,18 @@ uint32_t pick_location = 3;
 // uint32_t place_location = 3;
 
 //Place location 4
-double table2_x = 0.265849787727;
-double table2_y = -0.212182493;
-double pre_place_z = 0.4;
-double to_place = 0.2;
-uint32_t place_location = 4;
+// double table2_x = 0.265849787727;
+// double table2_y = -0.212182493;
+// double pre_place_z = 0.4;
+// double to_place = 0.2;
+// uint32_t place_location = 4;
 
-//Place location 5 (98% CP)
-// double table2_x = 0.25;
-// double table2_y = 0.25;
-// double pre_place_z = 0.6;
-// double to_place = 0.4;
-// uint32_t place_location = 5;
+//Place location 5 
+double table2_x = 0.25;
+double table2_y = 0.25;
+double pre_place_z = 0.6;
+double to_place = 0.4;
+uint32_t place_location = 5;
 
 //Place location 6
 // double table2_x = -0.25;
@@ -218,6 +225,13 @@ uint32_t place_location = 4;
 // double pre_place_z = 0.6;
 // double to_place = 0.4;
 // uint32_t place_location = 12;
+
+//Place location 13 ERROR HANDLING
+// double table2_x = -0.3;
+// double table2_y = 0.3;
+// double pre_place_z = 0.6;
+// double to_place = 0.5;
+// uint32_t place_location = 13;
 
 
 
@@ -311,7 +325,6 @@ geometry_msgs::Pose moveToPreGraspPose(moveit::planning_interface::MoveGroupInte
 
   moveit::planning_interface::MoveGroupInterface::Plan my_plan_pre_grasp;
   bool success = (arm_group.plan(my_plan_pre_grasp) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
-  ROS_INFO_STREAM("Planning time for pre-grasp motion is "<<arm_group.getPlanningTime());
   if(success == 0){
     ROS_INFO_STREAM("No motion plan found to pre-grasp pose");
     ROS_INFO_STREAM("Shutting down...");
@@ -377,21 +390,23 @@ void graspPose(moveit::planning_interface::MoveGroupInterface& arm_group, geomet
 
   //Cartesian path with constraints
   double fraction = arm_group.computeCartesianPath(waypoints, eef_step, jump_threshold, trajectory, test_constraints, avoid_collisions);
-  //std::cout <<"The whole joint trajectory : "<< trajectory.joint_trajectory << std::endl;
 
-  std::cout <<"Only point 21 position 0: "<< trajectory.joint_trajectory.points[21].positions[0] << std::endl;
-  //std::cout<<"no of points"<<trajectory.joint_trajectory.points.size(); is 23
-  //std::cout<<"no of joints"<<trajectory.joint_trajectory.joint_names.size(); is 7
-  for(uint32_t j = 0; j < 7; ++j){
+  //Uncomment to print the whole joint trajectory
+  //ROS_INFO_STREAM("The whole joint trajectory : "<< trajectory.joint_trajectory << std::endl);
 
-    for (uint32_t i = 0; i < 23; ++i){
+  for(std::size_t j = 0; j < trajectory.joint_trajectory.joint_names.size(); ++j){
+
+    //ROS_INFO_STREAM("Joint "<<j+1<<" cartesian point 0"<<" : "<<trajectory.joint_trajectory.points[0].positions[j]<<"\n");
+
+    for (std::size_t i = 1; i < trajectory.joint_trajectory.points.size(); ++i){
       
-      joint_distances[j] =0;
-      //ROS_INFO_STREAM(trajectory.joint_trajectory.points[j].positions[i]);
-      std::cout<<"Joint "<<j+1<<" cartesian point "<<i<<" : "<<trajectory.joint_trajectory.points[i].positions[j]<<"\n";
+      joint_distances[j] += abs(trajectory.joint_trajectory.points[i].positions[j]-trajectory.joint_trajectory.points[i-1].positions[j]);
+      // ROS_INFO_STREAM("Joint "<<j+1<<" cartesian point "<<i<<" : "<<trajectory.joint_trajectory.points[i].positions[j]<<"\n");
+      // ROS_INFO_STREAM("Distance travelled at this stage "<<joint_distances[j]<<"\n");
+
     }
 
-    std::cout<<"Distance travelled by "<<trajectory.joint_trajectory.joint_names[j]<<" is "<<joint_distances[j]<<"\n";
+    ROS_INFO_STREAM("Distance travelled by "<<trajectory.joint_trajectory.joint_names[j]<<" is "<<joint_distances[j]);
   }
 
   ROS_INFO("Visualizing plan to pick (Cartesian path) (%.2f%% acheived)", fraction * 100.0);
@@ -502,22 +517,23 @@ void placePose(moveit::planning_interface::MoveGroupInterface& arm_group, geomet
 
   //Cartesian path with constraints
   double fraction = arm_group.computeCartesianPath(waypoints, eef_step, jump_threshold, trajectory, test_constraints, avoid_collisions);
+  
+  //Uncomment to print the whole joint trajectory
+  //ROS_INFO_STREAM("The whole joint trajectory : "<< trajectory.joint_trajectory << std::endl);
 
-  //std::cout <<"The whole joint trajectory : "<< trajectory.joint_trajectory << std::endl;
+  for(std::size_t j = 0; j < trajectory.joint_trajectory.joint_names.size(); ++j){
+    
+    //ROS_INFO_STREAM("Joint "<<j+1<<" cartesian point 0"<<" : "<<trajectory.joint_trajectory.points[0].positions[j]<<"\n");
 
-  //std::cout <<"Only point 21 position 0: "<< trajectory.joint_trajectory.points[21].positions[0] << std::endl;
-  std::cout<<"no of points"<<trajectory.joint_trajectory.points.size(); //is 21
-  std::cout<<"no of joints"<<trajectory.joint_trajectory.joint_names.size(); //is 7
-  for(uint32_t j = 0; j < 7; ++j){
+    for (std::size_t i = 1; i < trajectory.joint_trajectory.points.size(); ++i){
 
-    for (uint32_t i = 0; i < 21; ++i){
-      
-      joint_distances[j] =0;
-      //ROS_INFO_STREAM(trajectory.joint_trajectory.points[j].positions[i]);
-      std::cout<<"Joint "<<j+1<<" cartesian point "<<i<<" : "<<trajectory.joint_trajectory.points[i].positions[j]<<"\n";
+      joint_distances[j] += abs(trajectory.joint_trajectory.points[i].positions[j]-trajectory.joint_trajectory.points[i-1].positions[j]);
+      // ROS_INFO_STREAM("Joint "<<j+1<<" cartesian point "<<i<<" : "<<trajectory.joint_trajectory.points[i].positions[j]<<"\n");
+      // ROS_INFO_STREAM("Distance travelled at this stage "<<joint_distances[j]<<"\n");
+
     }
 
-    std::cout<<"Distance travelled by "<<trajectory.joint_trajectory.joint_names[j]<<" is "<<joint_distances[j]<<"\n";
+    ROS_INFO_STREAM("Distance travelled by "<<trajectory.joint_trajectory.joint_names[j]<<" is "<<joint_distances[j]);
   }
 
 
