@@ -67,21 +67,24 @@ The project is based on Ubuntu 18.04, ROS Melodic, gazebo 9.0, wstool and catkin
     ```
         rosrun kinova_arm_pick_and_place kinova_arm_pick_and_place_node
     ```
+	Note: Uncomment any pick/place location from the list of 12 different positions 
+	Cartesian path without constraints can be successfully computed for the first 10 locations
+	Uncomment line 389 and line 516 and comment lines 392 and 519 for Cartesian path without constraints
+	For Cartesian path with constraints, in case a path can't be computed the program is aborted.
+
 2. Run the kinova_arm_iksolver_node:
 
     ```
         rosrun kinova_arm_iksolver kinova_arm_iksolver_node
     ```
+	Note: IK solution for any end effector position and orientation can be computed by modifying the "eef_pose". A green marker is published at the position if an IK solution was found, a red marker is published if no IK solution was found.
+
 3. Run the kinova_arm_reachability_node:
 
     ```
         rosrun kinova_arm_reachability kinova_arm_reachability_node 
     ```
-4. Run the configuration_space_disatance_node:
+	Note: A plot of the reachable workspace in front of the arm can be visualized in Rviz.
 
-    ```
-        rosrun configuration_space_distance configuration_space_distance_node 
-    ```
- 
 
 
