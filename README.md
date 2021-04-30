@@ -4,9 +4,8 @@ Repository for kinova arm j2s7s300 refers to jaco v2 7DOF spherical 3fingers
 
 ## Getting Started
 
-The project is based on Ubuntu 18.04, ROS Melodic, gazebo 9.0, wstool and catkin tools. Links to the instructions for installing ROS, Gazebo, etc. are provided below
+The project is based on Ubuntu 18.04, ROS Melodic, wstool and catkin tools. Links to the instructions for installing ROS, Gazebo, etc. are provided below
 - [Install ROS](http://wiki.ros.org/melodic/Installation/Ubuntu)
-- [Install gazebo 9.0](http://gazebosim.org/tutorials?cat=install&tut=install_ubuntu&ver=9.0)
 - [Install wstool](http://wiki.ros.org/wstool#Installation)
 - [Install catkin-tools](http://catkin-tools.readthedocs.io/en/latest/installing.html)
 
