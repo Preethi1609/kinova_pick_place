@@ -58,11 +58,11 @@ double obj_z = table1_z + 0.1;
 // uint32_t pick_location = 1;
 
 //Pick location 2  
-// double table1_x = -0.3;
-// double table1_y = 0.0;
-// double pre_grasp_z = 0.5;
-// double to_grasp = 0.3;
-// uint32_t pick_location = 2;
+double table1_x = -0.3;
+double table1_y = 0.0;
+double pre_grasp_z = 0.5;
+double to_grasp = 0.3;
+uint32_t pick_location = 2;
 
 //Pick location 3 
 // double table1_x = 0;
@@ -72,11 +72,11 @@ double obj_z = table1_z + 0.1;
 // uint32_t pick_location = 3;
 
 //Pick location 4
-double table1_x = 0.265849787727;
-double table1_y = -0.212182493;
-double pre_grasp_z = 0.4;
-double to_grasp = 0.2;
-uint32_t pick_location = 4;
+// double table1_x = 0.265849787727;
+// double table1_y = -0.212182493;
+// double pre_grasp_z = 0.4;
+// double to_grasp = 0.2;
+// uint32_t pick_location = 4;
 
 //Pick location 5
 // double table1_x = 0.25;
@@ -171,11 +171,11 @@ uint32_t pick_location = 4;
 // uint32_t place_location = 4;
 
 //Place location 5 
-double table2_x = 0.25;
-double table2_y = 0.25;
-double pre_place_z = 0.6;
-double to_place = 0.4;
-uint32_t place_location = 5;
+// double table2_x = 0.25;
+// double table2_y = 0.25;
+// double pre_place_z = 0.6;
+// double to_place = 0.4;
+// uint32_t place_location = 5;
 
 //Place location 6
 // double table2_x = -0.25;
@@ -213,11 +213,11 @@ uint32_t place_location = 5;
 // uint32_t place_location = 10;
 
 //Place location 11
-// double table1_x = -0.3;
-// double table1_y = 0.3;
-// double pre_grasp_z = 0.6;
-// double to_grasp = 0.4;
-// uint32_t place_location = 11;
+double table2_x = -0.3;
+double table2_y = 0.3;
+double pre_place_z = 0.6;
+double to_place = 0.4;
+uint32_t place_location = 11;
 
 //Place location 12 NO MOTION PLAN FOUND... FOR ERROR HANDLING
 // double table2_x = 0.25;
@@ -332,7 +332,6 @@ geometry_msgs::Pose moveToPreGraspPose(moveit::planning_interface::MoveGroupInte
     ros::shutdown();
   }
   arm_group.execute(my_plan_pre_grasp);
-  //arm_group.move();
   return eef_pose_pre_grasp;
 
 }
@@ -349,7 +348,6 @@ void graspPose(moveit::planning_interface::MoveGroupInterface& arm_group, geomet
   eef_pose_grasp.position.z -= to_grasp;                            //Moving down 
 
   waypoints.push_back(eef_pose_grasp);
-  //arm_group.setPoseTarget(eef_pose_grasp);
   arm_group.setMaxVelocityScalingFactor(0.1); //Cartesian motions needs to be slower 
 
   moveit_msgs::OrientationConstraint ocm;
@@ -359,7 +357,6 @@ void graspPose(moveit::planning_interface::MoveGroupInterface& arm_group, geomet
   ocm.orientation.y = -0.0275425709658;
   ocm.orientation.z = -0.00145792044579;
   ocm.orientation.w = 0.15192109315;
-  //ocm.orientation.w = 1.0;
 
   ocm.absolute_x_axis_tolerance = 0.00001;
   ocm.absolute_y_axis_tolerance = 0.00001;
@@ -418,7 +415,6 @@ void graspPose(moveit::planning_interface::MoveGroupInterface& arm_group, geomet
   }
   moveit::planning_interface::MoveGroupInterface::Plan my_plan_grasp;
   my_plan_grasp.trajectory_ = trajectory;
-  //arm_group.move();
   arm_group.execute(my_plan_grasp);
   ROS_INFO_STREAM("Executing Cartesian path for pick");
 
@@ -465,7 +461,6 @@ geometry_msgs::Pose moveToPrePlacePose(moveit::planning_interface::MoveGroupInte
     ros::shutdown();
   }
   arm_group.execute(my_plan_pre_place);
-  //arm_group.move();
   return eef_pose_pre_place;
 
 }
@@ -547,7 +542,6 @@ void placePose(moveit::planning_interface::MoveGroupInterface& arm_group, geomet
   }
   moveit::planning_interface::MoveGroupInterface::Plan my_plan_place;
   my_plan_place.trajectory_ = trajectory;
-  //arm_group.move();
   arm_group.execute(my_plan_place);
 
   ROS_INFO_STREAM("Executing Cartesian path for place");
@@ -582,8 +576,6 @@ void moveToInitialPose(moveit::planning_interface::MoveGroupInterface& arm_group
 
 }
 
-
-
 int main(int argc, char** argv)
 {
   ros::init(argc, argv, "kinova_arm_pick_place");
@@ -605,9 +597,6 @@ int main(int argc, char** argv)
   ROS_INFO_STREAM("Planner id arm:"<<arm_group.getDefaultPlannerId("arm"));
 
   ROS_INFO_STREAM("Planner id gripper:"<<arm_group.getDefaultPlannerId("gripper"));
-
-  //arm_group.setPlannerId("PRM");
-  //gripper_group.setPlannerId("RRTstar");
 
   addCollisionObjects(planning_scene_interface);
 
